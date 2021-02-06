@@ -1,5 +1,6 @@
 # SomeWirelessHub
-Base on Arduino and NRF24L01+
+Base on Arduino and NRF24L01+  
+3D print parts https://www.thingiverse.com/thing:2813599
 
 ## Transmitter  
 * Arduino nano
