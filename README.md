@@ -11,3 +11,7 @@ Base on Arduino and NRF24L01+
 ## Receiver  
 * Arduino pro micro
 * NRF24L01+
+
+## How to:
+Installing Additional Arduino Libraries https://www.arduino.cc/en/guide/libraries?setlang=en  
+
