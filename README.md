@@ -1,12 +1,12 @@
 # SomeWirelessHub
 Base on Arduino and NRF24L01+
 
-##Transmitter  
+## Transmitter  
 * Arduino nano
 * NRF24L01+
 
 
 
-##Receiver  
+## Receiver  
 * Arduino pro micro
 * NRF24L01+
