@@ -23,3 +23,12 @@ Arduino pro micro
 ## How to:
 Installing Additional Arduino Libraries https://www.arduino.cc/en/guide/libraries?setlang=en  
 
+|  Arduino  Nano | NRF24L01  |
+|  ----  | ----  |
+| 3V3  | VCC |
+| GND  | GND |
+| D9 | CE |
+| D10 | CSN |
+| D13 | SCK |
+| D11 | MOSI |
+| D12 | MISO |
