@@ -4,7 +4,7 @@ Base on Arduino and NRF24L01+
 ## Need:
 3D print parts https://www.thingiverse.com/thing:2813599  
 ArduinoJoystickLibrary https://github.com/MHeironimus/ArduinoJoystickLibrary  
-RF24 arduino library https://github.com/nRF24/RF24
+RF24 arduino library https://github.com/nRF24/RF24  
 Arduino nano  
 Arduino pro micro  
 2×NRF24L01+  
