@@ -8,6 +8,10 @@ RF24 arduino library https://github.com/nRF24/RF24
 Arduino nano  
 Arduino pro micro  
 2×NRF24L01+  
+Lithium battery 
+Lithium battery charging and boosting integrated board  
+Some encoders  
+Some buttons  
 
 
 ## Transmitter  
