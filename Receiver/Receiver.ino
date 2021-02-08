@@ -1,20 +1,13 @@
 
-/*
-* Arduino Wireless Communication Tutorial
-*       Example 1 - Receiver Code
-*                
-* by Dejan Nedelkovski, www.HowToMechatronics.com
-* 
-* Library: TMRh20/RF24, https://github.com/tmrh20/RF24/
-*/
 #include <Joystick.h>
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
-#define led 10
+#define NUM_BUTTONS 18 //num of button 
 RF24 radio(7, 8); // CE, CSN
 const byte address[6] = "00001";
-int text = 0;
+long button = 0x00000;
+int buttonstate = 0; //record button state
 
 Joystick_ Joystick(
   JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_JOYSTICK,
@@ -27,24 +20,41 @@ Joystick_ Joystick(
 
 
 void setup() {
-  digitalWrite(led, LOW);
+  pinMode(10,OUTPUT);
+  digitalWrite(10,HIGH);
   radio.begin();
   radio.openReadingPipe(0, address);
+  radio.setDataRate(RF24_1MBPS);
   radio.setPALevel(RF24_PA_MIN);
   radio.startListening();
   Joystick.begin(false);
 }
 
-void loop() {
-
-  while (!radio.available());
+void loop() 
+{
+  while (!radio.available())
+  {   digitalWrite(10,HIGH);
+      delay(100);
+      digitalWrite(10,LOW);
+  }
   
-  radio.read(&text, sizeof(text));
-  int button = text/10;
-  int buttonstate = text%10;
-
-  Joystick.setButton(button, buttonstate);
-
+  radio.read(&button, sizeof(button));
+  //int button = text/10;
+  //int buttonstate = text%10;
+  if(189 < button && button < 262)
+  {
+    int Encoder_button = button/10;
+    int Encoder_buttonstate = button%10;
+    Joystick.setButton(Encoder_button, Encoder_buttonstate);
+  }
+  
+  else{
+  for(uint8_t i=1; i < NUM_BUTTONS+1; i++)
+  {
+    buttonstate = bitRead(button,i);
+    Joystick.setButton(i, buttonstate);  
+  }
+  }
   Joystick.sendState();
   
 

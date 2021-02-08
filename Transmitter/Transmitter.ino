@@ -10,6 +10,7 @@ RF24 radio(9, 10); // CE, CSN
 boolean buttonState = 0;
 const byte address[6] = "00001";
 int text=0;
+long button=0x00000;
 
 // initialize button matrix ///////////////////////////////////////////////////
 const uint8_t NUM_ROW_PINS = 4; //Number of rows of keyboard matrix
@@ -44,9 +45,10 @@ uint8_t countersCCW[NUM_ENCODERS] = {0, 0, 0, 0};
 
 
 void setup() {
-  Serial.begin(115200);
+  //Serial.begin(115200);
   radio.begin();
   radio.openWritingPipe(address);
+  radio.setDataRate(RF24_1MBPS);
   radio.setPALevel(RF24_PA_MIN);
   radio.stopListening();
 }
@@ -54,14 +56,6 @@ void setup() {
 
 
 void loop() {
-  matrix.scan();
-
-  // Map 18 normal buttons
-//  for (uint8_t i=0; i < NUM_MAPPED_BUTTONS; i++) {
-//    text=i*10+matrix.getButtonState(BUTTON_MAP[i]);
-//    radio.write(&text, sizeof(text));
-//  };
-
   // Map four encoders to 8 buttons (26 total)
   for (uint8_t i = 0; i < NUM_ENCODERS; i++) {
     encoders[i]->scan();
@@ -75,16 +69,14 @@ void loop() {
 
       if (countersCW[i] == 1) {
         // activate associated button (set to low / clear bit)
-        //Joystick.setButton(NUM_MAPPED_BUTTONS + i * 2, 1);
-        text=(18+i)*10+1;
+        text=(NUM_MAPPED_BUTTONS+2*i)*10+1;
         radio.write(&text, sizeof(text));
-        Serial.print(text);
+          //bitSet(button,NUM_MAPPED_BUTTONS+2*i);
       } else if (countersCW[i] == ENC_DELAY) {
         // deactivate associated button (set to high / set bit)
-        //Joystick.setButton(NUM_MAPPED_BUTTONS + i * 2, 0);
-        text=(18+i)*10+0;
+        text=(NUM_MAPPED_BUTTONS+2*i)*10+0;
         radio.write(&text, sizeof(text));
-        Serial.print(text);
+          //bitClear(button,NUM_MAPPED_BUTTONS+2*i);
       } else if (countersCW[i] == (ENC_DELAY * 2)) {
 
         encoders[i]->stepsCW--;
@@ -105,16 +97,14 @@ void loop() {
 
       if (countersCCW[i] == 1) {
         // activate associated button (set to low / clear bit)
-        //Joystick.setButton(NUM_MAPPED_BUTTONS + i * 2 + 1, 1);
-        text=(18+i)*10+0;
+        text=(NUM_MAPPED_BUTTONS+2*i+1)*10+1;
         radio.write(&text, sizeof(text));
-        Serial.print(text);
+         // bitSet(button,NUM_MAPPED_BUTTONS+2*i+1);
       } else if (countersCCW[i] == ENC_DELAY) {
         // deactivate associated button (set to high / set bit)
-        //Joystick.setButton(NUM_MAPPED_BUTTONS + i * 2 + 1, 0);
-        text=(18+i)*10+1;
+        text=(NUM_MAPPED_BUTTONS+2*i+1)*10+0;
         radio.write(&text, sizeof(text));
-        Serial.print(text);
+         // bitClear(button,NUM_MAPPED_BUTTONS+2*i+1);
       } else if (countersCCW[i] == (ENC_DELAY * 2)) {
 
         encoders[i]->stepsCCW--;
@@ -126,8 +116,28 @@ void loop() {
       countersCCW[i]++;
     }
   }
+ matrix.scan();
 
-  
-  
+//   Map 18 normal buttons
+  for (uint8_t i=0; i < NUM_MAPPED_BUTTONS; i++)
+  {
+    if(matrix.getButtonState(BUTTON_MAP[i])==1)
+    {
+      bitSet(button,i+1);
+     
+    }
+    else
+    {
+      bitClear(button,i+1);  
+    }
+     //text=i*10+1;
+   // radio.write(&text, sizeof(text));
+    
+  };
+
+  radio.write(&button, sizeof(button));
+  //Serial.print(button);
+  //Serial.print("\n");
+ 
   
 }
